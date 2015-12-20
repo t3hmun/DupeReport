@@ -1,4 +1,4 @@
-﻿namespace t3hmun.Datos
+﻿namespace t3hmun.app.DupeReport
 {
     using System.Collections.Generic;
     using System.IO;

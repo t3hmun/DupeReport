@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Datos", "Datos\Datos.csproj", "{4D3D3E2E-5793-4734-AA1E-7A75F5DF0256}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DupeReport", "DupeReport\DupeReport.csproj", "{46DB4877-3C51-45A3-8373-66C1BFBCC368}"
 EndProject
 Global
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4D3D3E2E-5793-4734-AA1E-7A75F5DF0256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D3D3E2E-5793-4734-AA1E-7A75F5DF0256}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D3D3E2E-5793-4734-AA1E-7A75F5DF0256}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D3D3E2E-5793-4734-AA1E-7A75F5DF0256}.Release|Any CPU.Build.0 = Release|Any CPU
 		{46DB4877-3C51-45A3-8373-66C1BFBCC368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46DB4877-3C51-45A3-8373-66C1BFBCC368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46DB4877-3C51-45A3-8373-66C1BFBCC368}.Release|Any CPU.ActiveCfg = Release|Any CPU
