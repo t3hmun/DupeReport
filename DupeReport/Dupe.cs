@@ -11,20 +11,35 @@
     /// </summary>
     public class Dupe
     {
+
+        private static void Spam(string text)
+        {
+            Console.WriteLine(text);
+        }
+
         /// <summary>
         /// Returns groups of files that have other files with identical SHA512 hashes.
         /// </summary>
         /// <param name="dir">Dir to search under.</param>
         /// <returns></returns>
-        public static IEnumerable<IGrouping<string, HashFileTuple>> FindDupesInDir(DirectoryInfo dir)
+        public static IEnumerable<IGrouping<string, HashFileTuple>> FindDupesInDir(DirectoryInfo dir, bool spam = true)
         {
+            if(spam) Spam("Gathering file list...");
             var files = GetAllFiles(dir);
+            if (spam) Spam(("...done."));
+
+            if (spam) Spam("Checking for size dupes...");
             var sizeDupes = files.GroupBy(f => f.Length).Where(g => g.Count() > 1);
+            if (spam) Spam(("...done."));
 
             // Flatten and then group again is easier than checking for dupes in the groups...
+            if (spam) Spam("Calculating dupe hashes...");
             var hashes = CalcHashesAndFlatten(sizeDupes);
+            if (spam) Spam(("...done."));
 
+            if (spam) Spam("Sorting results...");
             var results = hashes.GroupBy(h => h.Hash).Where(g => g.Count() > 1);
+            if (spam) Spam(("...done."));
             return results;
         }
 
