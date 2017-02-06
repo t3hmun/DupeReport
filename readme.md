@@ -3,14 +3,19 @@
 
 ## What
 
-App to find duplicate files and output result to text file.
+Simple fast program to find, report and optionally delete duplicate files.
 
-_Warning_ This program reads enitre files into memory before calculating hashes, not ideal if possible duplicates are too big for your RAM (rather unlikely).
+Default mode does not delete, just writes a report in a text file.
+
+_Warning_ This program reads enitre files into memory before calculating hashes, not ideal if files are too big for your RAM.
+Also may use up ram if you have a very fast disk and slow processor (the hash calculation is threadpooled).
 
 
 ## Usage
 
 Simply put the exe in a folder and run it, it'll scan the current folder and all subdirs recursively and output `dupes.txt` with the results.
+
+Run from the CLI in order to observe progress and use options.
 
 
 ### Options
@@ -21,7 +26,7 @@ Options must be added separately, with spaces.
 : Silent mode, no console spam.
 
 `-d`
-: Delete mode, duplicates are deleted, duplicate with the shortest name is kept. If there are multiple duplicates with the shortest name the choice between them is random.
+: Delete mode, duplicates are deleted and logged as deleted, duplicate with the shortest name is kept. If there are multiple duplicates with the shortest name the choice between them is random.
 
 `-x`
 : Simulate delete mode, files will not be deleted, only logged as deleted.
