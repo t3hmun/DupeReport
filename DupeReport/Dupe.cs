@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace t3hmun.app.DupeReport
@@ -51,9 +52,9 @@ namespace t3hmun.app.DupeReport
         /// </summary>
         private static List<HashFileTuple> CalcHashesAndFlatten(IEnumerable<IGrouping<long, FileInfo>> sizeDupes)
         {
-            var hasher = new SHA512Managed();
             var safeHashes = new ConcurrentBag<HashFileTuple>();
             var tasks = new List<Task>();
+
             foreach (var sizeDupeGroup in sizeDupes)
             {
                 foreach (var fi in sizeDupeGroup)
@@ -64,13 +65,16 @@ namespace t3hmun.app.DupeReport
                     // Throw the hash calculation onto the threadpool so the main thread can get on with IO.
                     tasks.Add(Task.Run(() =>
                     {
+                        // SHA512Managed.ComputeHash() is NOT THREADSAFE.
+                        // Seems odd but ComputeHash uses instance vars.
+                        var hasher = new SHA512Managed();
                         var hashBytes = hasher.ComputeHash(data);
                         safeHashes.Add(new HashFileTuple(BitConverter.ToString(hashBytes), fi));
                     }));
                 }
             }
 
-            Task.WhenAll(tasks).Wait();
+            Task.WaitAll(tasks.ToArray());
 
             return safeHashes.ToList();
         }
