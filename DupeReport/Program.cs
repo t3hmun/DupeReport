@@ -42,12 +42,16 @@ namespace t3hmun.app.DupeReport
             var res = Dupe.FindDupesInDir(di, spam);
 
             timer.Stop();
+            if (spam) Spam($"Time taken {timer.Elapsed.TotalSeconds} seconds.");
 
             var text = new List<string>();
 
             text.Add($"{timer.Elapsed.TotalSeconds} seconds taken to complete comparison.");
             
             if (spam) Spam("Generating report...");
+
+            double savableKb = 0;
+
             foreach (var group in res.Select(a => a.ToArray()))
             {
                 IEnumerable<string> pathlines = null;
@@ -69,10 +73,20 @@ namespace t3hmun.app.DupeReport
 
                 names = names ?? string.Join("|", group.Select(a => a.File.Name));
                 pathlines = pathlines ?? group.Select(f => " " + f.File.FullName);
-                text.Add(names);
+                 // The length should have been pre-cached because the FileInfo was created using GetFiles().
+                var size = (double)group.First().File.Length / 1024 / 1024;
+                var totalSize = size * group.Length;
+                savableKb += totalSize;
+
+                text.Add($"{names} ({size:N2}mb)");
                 text.AddRange(pathlines);
             }
+
+            var totalSavableSpaceMessage = $"Total savable space: {savableKb:N2}mb";
+            text.Add(totalSavableSpaceMessage);
+
             if (spam) Spam("... done.");
+            if (spam) Spam(totalSavableSpaceMessage);
 
             if (spam) Spam("Writing Report...");
             File.WriteAllLines("dupes.txt", text);
