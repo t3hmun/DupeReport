@@ -1,14 +1,19 @@
-﻿namespace t3hmun.app.DupeReport
+﻿
+namespace t3hmun.app.DupeReport
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Diagnostics;
 
     internal class Program
     {
         private static void Main(string[] args)
         {
+            var timer = new Stopwatch();
+            timer.Start();
+            
             var simulatedelete = false;
             var delete = false;
             var spam = true;
@@ -35,8 +40,13 @@
             var cwd = Directory.GetCurrentDirectory();
             var di = new DirectoryInfo(cwd);
             var res = Dupe.FindDupesInDir(di, spam);
+
+            timer.Stop();
+
             var text = new List<string>();
 
+            text.Add($"{timer.Elapsed.TotalSeconds} seconds taken to complete comparison.");
+            
             if (spam) Spam("Generating report...");
             foreach (var group in res.Select(a => a.ToArray()))
             {
