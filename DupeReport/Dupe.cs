@@ -1,4 +1,7 @@
-﻿namespace t3hmun.app.DupeReport
+﻿using System.Collections.Concurrent;
+using System.Threading.Tasks;
+
+namespace t3hmun.app.DupeReport
 {
     using System;
     using System.Collections.Generic;
@@ -49,19 +52,27 @@
         private static List<HashFileTuple> CalcHashesAndFlatten(IEnumerable<IGrouping<long, FileInfo>> sizeDupes)
         {
             var hasher = new SHA512Managed();
-            var hashes = new List<HashFileTuple>();
+            var safeHashes = new ConcurrentBag<HashFileTuple>();
+            var tasks = new List<Task>();
             foreach (var sizeDupeGroup in sizeDupes)
             {
                 foreach (var fi in sizeDupeGroup)
                 {
+                    // Do file io on main thread sequentially (this should be the bottleneck on a good system).
                     var data = File.ReadAllBytes(fi.FullName);
-                    var hashBytes = hasher.ComputeHash(data);
-                    // Can't group arrays without a custom IEqualityComparer.
-                    // Also want a string for humans anyway.
-                    hashes.Add(new HashFileTuple(BitConverter.ToString(hashBytes), fi));
+
+                    // Throw the hash calculation onto the threadpool so the main thread can get on with IO.
+                    tasks.Add(Task.Run(() =>
+                    {
+                        var hashBytes = hasher.ComputeHash(data);
+                        safeHashes.Add(new HashFileTuple(BitConverter.ToString(hashBytes), fi));
+                    }));
                 }
             }
-            return hashes;
+
+            Task.WhenAll(tasks).Wait();
+
+            return safeHashes.ToList();
         }
 
         /// <summary>
