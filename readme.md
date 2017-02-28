@@ -10,6 +10,11 @@ Default mode does not delete, just writes a report in a text file.
 _Warning_ This program reads enitre files into memory before calculating hashes, not ideal if files are too big for your RAM.
 Also may use up ram if you have a very fast disk and slow processor (the hash calculation is threadpooled).
 
+## Download
+
+Grab the exe from [Releases](https://github.com/t3hmun/DupeReport/releases) or clone the repo and compile it yourself.
+Nothing special is required to compile it.
+
 
 ## Usage
 
